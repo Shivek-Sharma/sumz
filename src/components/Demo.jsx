@@ -39,9 +39,12 @@ const Demo = () => {
         e.preventDefault();
         setResStatus(100);
 
+        // When an article is already summarized before
         const existingArticle = allArticles.find((item) => item.url === article.url);
-
-        if (existingArticle) return setArticle(existingArticle);
+        if (existingArticle) {
+            setResStatus(200);
+            return setArticle(existingArticle);
+        }
 
         try {
             const response = await axios.request(options);
@@ -77,7 +80,7 @@ const Demo = () => {
                     <input type="url" placeholder="Enter a URL" value={article.url} onChange={(e) => setArticle({ ...article, url: e.target.value })} required className="url_input peer" />
                     {/* When you need to style an element based on the state of a sibling element, mark the sibling with the 'peer' class, and use peer-* modifiers to style the target element */}
 
-                    <button type="submit" className="submit_btn peer-focus:border-gray-700 peer-focus:text-gray-700">↵</button>
+                    <button type="submit" className="submit_btn peer-focus:border-gray-700 peer-focus:text-gray-700"><p className="text-2xl pb-2">↵</p></button>
                 </form>
 
                 {/* Browse URL History */}
@@ -101,7 +104,7 @@ const Demo = () => {
             <div className="my-10 max-w-full flex justify-center items-center">
                 {resStatus === 100 ? (
                     <img src={loader} alt="loader" className="w-20 h-20 object-contain" />
-                ) : resStatus === 400 ? (
+                ) : (resStatus === 400 ? (
                     <p className="font-inter font-bold text-black text-center">
                         Something went wrong, try again!
                     </p>
@@ -118,7 +121,7 @@ const Demo = () => {
                                 </p>
                             </div>
                         </div>
-                    ))
+                    )))
                 }
             </div>
         </section>
