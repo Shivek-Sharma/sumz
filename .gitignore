@@ -12,7 +12,6 @@ dist
 dist-ssr
 *.local
 .env*
-.eslintrc.cjs
 
 # Editor directories and files
 .vscode/*
@@ -24,7 +23,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Config files
-vite.config.js
-postcss.config.js
