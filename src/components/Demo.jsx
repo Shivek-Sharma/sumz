@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 import { copy, linkIcon, loader, tick } from "../assets";
+import { useLazyGetSummaryQuery } from "../services/article";
 
 const Demo = () => {
     const [article, setArticle] = useState({
@@ -9,8 +9,9 @@ const Demo = () => {
         summary: ''
     });
 
+    const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
+
     const [allArticles, setAllArticles] = useState([]);
-    const [resStatus, setResStatus] = useState();
     const [copied, setCopied] = useState('');
 
     // Load data from localStorage on mount
@@ -22,35 +23,19 @@ const Demo = () => {
         }
     }, [])
 
-    const options = {
-        method: 'GET',
-        url: 'https://article-extractor-and-summarizer.p.rapidapi.com/summarize',
-        params: {
-            url: article.url,
-            length: '3'
-        },
-        headers: {
-            'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
-            'X-RapidAPI-Host': 'article-extractor-and-summarizer.p.rapidapi.com'
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setResStatus(100);
 
         // When an article is already summarized before
         const existingArticle = allArticles.find((item) => item.url === article.url);
         if (existingArticle) {
-            setResStatus(200);
             return setArticle(existingArticle);
         }
 
-        try {
-            const response = await axios.request(options);
-            // console.log(response)
-            setResStatus(200);
+        const response = await getSummary({ articleUrl: article.url });
+        // console.log(response)
 
+        if (response?.data) {
             const newArticle = { ...article, summary: response.data.summary };
             const updatedAllArticles = [newArticle, ...allArticles];
 
@@ -58,9 +43,6 @@ const Demo = () => {
             setArticle(newArticle);
             setAllArticles(updatedAllArticles);
             localStorage.setItem('articles', JSON.stringify(updatedAllArticles));
-        } catch (error) {
-            console.error(error);
-            setResStatus(400);
         }
     };
 
@@ -102,11 +84,15 @@ const Demo = () => {
 
             {/* Display Article Summary */}
             <div className="my-10 max-w-full flex justify-center items-center">
-                {resStatus === 100 ? (
+                {isFetching ? (
                     <img src={loader} alt="loader" className="w-20 h-20 object-contain" />
-                ) : (resStatus === 400 ? (
+                ) : (error ? (
                     <p className="font-inter font-bold text-black text-center">
                         Something went wrong, try again!
+                        <br />
+                        <span className="font-satoshi font-normal text-gray-700">
+                            {error.data?.error}
+                        </span>
                     </p>
                 ) : (
                     article.summary && (

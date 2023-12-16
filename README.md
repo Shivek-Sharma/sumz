@@ -10,7 +10,7 @@ Sumz is your go-to solution for effortlessly summarizing lengthy articles into c
 
 ## Introduction
 
-Sumz is an advanced AI article summarizer application that leverages state-of-the-art technologies to provide a seamless and efficient summarization experience. Our application is crafted with a user-friendly UI, combining the power of React.js for the frontend, Tailwind CSS for styling, Node.js for the runtime environment, and a third-party API for article scraping and summarization.
+Sumz is an advanced AI article summarizer application that leverages state-of-the-art technologies to provide a seamless and efficient summarization experience. Our application is crafted with a user-friendly UI, combining the power of React.js for the frontend, Tailwind CSS for styling, Node.js for the runtime environment, a third-party API for article scraping and summarization, and Redux Toolkit (RTK) Query for seamless API Queries.
 
 ## Features
 
